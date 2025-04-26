@@ -1,0 +1,8 @@
+baseURL = "https://paulojauregui.com/"
+languageCode = "en-us"
+title = "Paulo Jauregui"
+theme = "ananke"
+
+[params]
+  description = "Software Engineering & ML Portfolio"
+  mainSections = ["posts", "projects"]
