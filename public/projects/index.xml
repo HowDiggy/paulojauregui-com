@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects on Paulo Jauregui</title>
+    <link>http://localhost:1313/projects/</link>
+    <description>Recent content in Projects on Paulo Jauregui</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>K3s Homelab Cluster</title>
+      <link>http://localhost:1313/projects/k3s-cluster/</link>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/k3s-cluster/</guid>
+      <description>&lt;p&gt;A 6-node K3s cluster managed with GitOps principles using ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (also running etcd)&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes&lt;/li&gt;&#xA;&lt;li&gt;Traefik ingress controller&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for GitOps deployment&lt;/li&gt;&#xA;&lt;li&gt;ELK stack for observability&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technologies-used&#34;&gt;Technologies Used&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (K3s)&lt;/li&gt;&#xA;&lt;li&gt;Ansible for automation&lt;/li&gt;&#xA;&lt;li&gt;Kustomize for configuration&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for continuous deployment&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>
