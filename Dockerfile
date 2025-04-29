@@ -8,7 +8,7 @@ WORKDIR /src
 COPY . .
 
 # Build the website
-RUN hugo --minify
+RUN hugo --config hugo.toml --minify
 
 # Production stage
 FROM nginx:1.23-alpine
