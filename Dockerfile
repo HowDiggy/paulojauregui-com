@@ -7,15 +7,17 @@ WORKDIR /src
 # Copy source files
 COPY . .
 
-# Create output directory with correct permissions
-RUN mkdir -p /tmp/output && \
-    hugo --config hugo.toml --minify --destination /tmp/output
+# Switch to root to fix permissions
+USER root
+
+# Build the website
+RUN hugo --config hugo.toml --minify
 
 # Production stage
 FROM nginx:1.23-alpine
 
 # Copy the built site from the builder stage
-COPY --from=builder /tmp/output /usr/share/nginx/html
+COPY --from=builder /src/public /usr/share/nginx/html
 
 # Copy custom nginx config
 RUN rm /etc/nginx/conf.d/default.conf
