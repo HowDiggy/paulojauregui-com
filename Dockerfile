@@ -1,5 +1,5 @@
 # Build stage
-FROM klakegg/hugo:latest-ext-alpine AS builder
+FROM ghcr.io/gohugoio/hugo:latest AS builder
 
 # Set working directory
 WORKDIR /src
