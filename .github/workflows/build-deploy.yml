@@ -32,7 +32,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/howdiggy/paulojauregui-com:latest
-            ghcr.io/${{ github.repository_owner | lowercase }}/paulojauregui-com:${{ github.sha }}
+            ghcr.io/howdiggy/paulojauregui-com:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -48,7 +48,7 @@ jobs:
           
           # Update the deployment.yaml with the new image tag
           if [ -f websites/paulojauregui-com/deployment.yaml ]; then
-            sed -i "s|image: ghcr.io/${{ github.repository_owner | lowercase }}/paulojauregui-com:.*|image: ghcr.io/${{ github.repository_owner | lowercase }}/paulojauregui-com:${{ github.sha }}|g" websites/paulojauregui-com/deployment.yaml
+            sed -i "s|image: ghcr.io/howdiggy/paulojauregui-com:.*|image: ghcr.io/howdiggy/paulojauregui-com:latest|g" websites/paulojauregui-com/deployment.yaml
           else
             # Copy files from template directory if available
             echo "Creating deployment files..."
@@ -63,7 +63,7 @@ jobs:
             
             # Update the image tag in the newly created deployment file
             if [ -f websites/paulojauregui-com/deployment.yaml ]; then
-              sed -i "s|image: ghcr.io/${{ github.repository_owner | lowercase }}/paulojauregui-com:.*|image: ghcr.io/${{ github.repository_owner | lowercase }}/paulojauregui-com:${{ github.sha }}|g" websites/paulojauregui-com/deployment.yaml
+              sed -i "s|image: ghcr.io/howdiggy/paulojauregui-com:.*|image: ghcr.io/howdiggy/paulojauregui-com:latest|g" websites/paulojauregui-com/deployment.yaml
             fi
           fi
           
@@ -73,5 +73,5 @@ jobs:
           
           # Commit and push changes
           git add websites/paulojauregui-com/
-          git commit -m "Update paulojauregui-com image to ${{ github.sha }}" || echo "No changes to commit"
+          git commit -m "Update paulojauregui-com image to latest" || echo "No changes to commit"
           git push
