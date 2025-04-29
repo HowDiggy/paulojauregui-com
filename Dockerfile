@@ -7,8 +7,9 @@ WORKDIR /src
 # Copy source files
 COPY . .
 
-# Build the website
-RUN hugo --config hugo.toml --minify
+# Fix permissions and build the website
+RUN chmod -R 777 /src && \
+    hugo --config hugo.toml --minify
 
 # Production stage
 FROM nginx:1.23-alpine
@@ -17,7 +18,6 @@ FROM nginx:1.23-alpine
 COPY --from=builder /src/public /usr/share/nginx/html
 
 # Copy custom nginx config if needed
-# Create a basic nginx configuration optimized for static sites
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/
 
