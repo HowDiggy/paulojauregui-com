@@ -4,7 +4,7 @@ date: 2025-04-25
 draft: false
 ---
 
-Welcome to my personal website! I'm Paulo Jauregui, a Mathematics-CS professional exploring software engineering and machine learning.
+Welcome to my personal website! I'm Paulo, a Mathematics-CS professional exploring software engineering, platform engineering, and machine learning.
 
 This site will document my technical projects and learning journey, including:
 
