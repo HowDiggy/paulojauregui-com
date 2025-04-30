@@ -23,18 +23,18 @@
       <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo Jauregui, a Mathematics-CS professional exploring software engineering and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;My K3s cluster (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software engineering and ML projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
-      <title>K3s Homelab Cluster</title>
-      <link>http://localhost:1313/projects/k3s-cluster/</link>
-      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/projects/k3s-cluster/</guid>
-      <description>&lt;p&gt;A 6-node K3s cluster managed with GitOps principles using ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (also running etcd)&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes&lt;/li&gt;&#xA;&lt;li&gt;Traefik ingress controller&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for GitOps deployment&lt;/li&gt;&#xA;&lt;li&gt;ELK stack for observability (ElasticSearch, Logstash, and Kibana)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technologies-used&#34;&gt;Technologies Used&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (K3s)&lt;/li&gt;&#xA;&lt;li&gt;Ansible for automation&lt;/li&gt;&#xA;&lt;li&gt;Kustomize for configuration&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for continuous deployment&lt;/li&gt;&#xA;&lt;li&gt;Proxmox as the hypervisor running this on Virtual Machines&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
-    </item>
-    <item>
       <title></title>
       <link>http://localhost:1313/projects/k3s-setup/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/projects/k3s-setup/</guid>
       <description>&lt;h1 id=&#34;setting-up-a-6-node-k3s-kubernetes-cluster-with-ansible&#34;&gt;Setting Up a 6-Node K3s Kubernetes Cluster with Ansible&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;Posted on April 29, 2025&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Hello fellow homelab enthusiasts! Today I&amp;rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;my-cluster-setup&#34;&gt;My Cluster Setup&lt;/h2&gt;&#xA;&lt;p&gt;For this project, I&amp;rsquo;m running:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I&amp;rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/projects/synology-iscsi/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/synology-iscsi/</guid>
+      <description>&lt;h1 id=&#34;setting-up-postgresql-with-synology-iscsi-storage-in-a-k3s-cluster&#34;&gt;Setting Up PostgreSQL with Synology iSCSI Storage in a k3s Cluster&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;Posted on April 29, 2025&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I&amp;rsquo;ll walk through how I connected my k3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

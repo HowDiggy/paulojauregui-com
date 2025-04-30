@@ -1,7 +1,7 @@
 ---
 title: "K3s Homelab Cluster"
 date: 2025-04-25
-draft: false
+draft: true
 ---
 
 A 6-node K3s cluster managed with GitOps principles using ArgoCD.
