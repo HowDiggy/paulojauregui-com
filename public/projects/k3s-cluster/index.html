@@ -13,7 +13,7 @@ Architecture
 3 worker nodes
 Traefik ingress controller
 ArgoCD for GitOps deployment
-ELK stack for observability
+ELK stack for observability (ElasticSearch, Logstash, and Kibana)
 
 Technologies Used
 
@@ -21,6 +21,7 @@ Kubernetes (K3s)
 Ansible for automation
 Kustomize for configuration
 ArgoCD for continuous deployment
+Proxmox as the hypervisor running this on Virtual Machines
 ">
     <meta name="generator" content="Hugo 0.147.0">
     
@@ -54,7 +55,7 @@ ArgoCD for continuous deployment
   <meta property="og:site_name" content="Paulo Jauregui">
   <meta property="og:title" content="K3s Homelab Cluster">
   <meta property="og:description" content="A 6-node K3s cluster managed with GitOps principles using ArgoCD.
-Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment">
+Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability (ElasticSearch, Logstash, and Kibana) Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment Proxmox as the hypervisor running this on Virtual Machines">
   <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="projects">
@@ -63,14 +64,14 @@ Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik in
 
   <meta itemprop="name" content="K3s Homelab Cluster">
   <meta itemprop="description" content="A 6-node K3s cluster managed with GitOps principles using ArgoCD.
-Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment">
+Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability (ElasticSearch, Logstash, and Kibana) Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment Proxmox as the hypervisor running this on Virtual Machines">
   <meta itemprop="datePublished" content="2025-04-25T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-04-25T00:00:00+00:00">
-  <meta itemprop="wordCount" content="46">
+  <meta itemprop="wordCount" content="59">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="K3s Homelab Cluster">
   <meta name="twitter:description" content="A 6-node K3s cluster managed with GitOps principles using ArgoCD.
-Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment">
+Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik ingress controller ArgoCD for GitOps deployment ELK stack for observability (ElasticSearch, Logstash, and Kibana) Technologies Used Kubernetes (K3s) Ansible for automation Kustomize for configuration ArgoCD for continuous deployment Proxmox as the hypervisor running this on Virtual Machines">
 
 	
   </head><body class="ma0 avenir bg-near-white development">
@@ -130,7 +131,7 @@ Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik in
 <li>3 worker nodes</li>
 <li>Traefik ingress controller</li>
 <li>ArgoCD for GitOps deployment</li>
-<li>ELK stack for observability</li>
+<li>ELK stack for observability (ElasticSearch, Logstash, and Kibana)</li>
 </ul>
 <h2 id="technologies-used">Technologies Used</h2>
 <ul>
@@ -138,6 +139,7 @@ Architecture 3 control plane nodes (also running etcd) 3 worker nodes Traefik in
 <li>Ansible for automation</li>
 <li>Kustomize for configuration</li>
 <li>ArgoCD for continuous deployment</li>
+<li>Proxmox as the hypervisor running this on Virtual Machines</li>
 </ul>
 <ul class="pa0">
   

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Paulo Jauregui</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Setting Up a 6-Node K3s Kubernetes Cluster with Ansible
+Posted on April 29, 2025
+Introduction
+Hello fellow homelab enthusiasts! Today I&rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.
+My Cluster Setup
+For this project, I&rsquo;m running:
+
+3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd
+3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)
+
+I&rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:">
+    <meta name="generator" content="Hugo 0.147.0">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/projects/k3s-setup/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/projects/k3s-setup/">
+  <meta property="og:site_name" content="Paulo Jauregui">
+  <meta property="og:title" content="Paulo Jauregui">
+  <meta property="og:description" content="Setting Up a 6-Node K3s Kubernetes Cluster with Ansible Posted on April 29, 2025
+Introduction Hello fellow homelab enthusiasts! Today I’m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.
+My Cluster Setup For this project, I’m running:
+3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd 3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2) I’m using Ansible to automate the deployment with all nodes managed in my inventory:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+
+  <meta itemprop="name" content="Paulo Jauregui">
+  <meta itemprop="description" content="Setting Up a 6-Node K3s Kubernetes Cluster with Ansible Posted on April 29, 2025
+Introduction Hello fellow homelab enthusiasts! Today I’m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.
+My Cluster Setup For this project, I’m running:
+3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd 3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2) I’m using Ansible to automate the deployment with all nodes managed in my inventory:">
+  <meta itemprop="wordCount" content="940">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Paulo Jauregui">
+  <meta name="twitter:description" content="Setting Up a 6-Node K3s Kubernetes Cluster with Ansible Posted on April 29, 2025
+Introduction Hello fellow homelab enthusiasts! Today I’m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.
+My Cluster Setup For this project, I’m running:
+3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd 3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2) I’m using Ansible to automate the deployment with all nodes managed in my inventory:">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        Paulo Jauregui
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Projects
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1"></h1>
+      
+      
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="setting-up-a-6-node-k3s-kubernetes-cluster-with-ansible">Setting Up a 6-Node K3s Kubernetes Cluster with Ansible</h1>
+<p><em>Posted on April 29, 2025</em></p>
+<h2 id="introduction">Introduction</h2>
+<p>Hello fellow homelab enthusiasts! Today I&rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.</p>
+<h2 id="my-cluster-setup">My Cluster Setup</h2>
+<p>For this project, I&rsquo;m running:</p>
+<ul>
+<li>3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd</li>
+<li>3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)</li>
+</ul>
+<p>I&rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">all</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">children</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">control_plane</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">hosts</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-cp0</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.30</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-cp1</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.31</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-cp2</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.32</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">workers</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">hosts</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-worker0</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.40</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-worker1</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.41</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s-worker2</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.1.42</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ansible_user</span>: <span style="color:#ae81ff">paulo</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ansible_ssh_private_key_file</span>: <span style="color:#ae81ff">/home/paulo/.ssh/id_rsa_k8s</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">ansible_ssh_extra_args</span>: <span style="color:#e6db74">&#34;-o StrictHostKeyChecking=no&#34;</span>
+</span></span></code></pre></div><h2 id="the-kubernetes-deployment-playbook">The Kubernetes Deployment Playbook</h2>
+<p>Creating a playbook for deploying K3s was more complex than I initially expected. Here were some key lessons learned:</p>
+<h3 id="initial-challenges">Initial Challenges</h3>
+<p>My first attempt at the Ansible playbook had several issues:</p>
+<ol>
+<li>No proper HA configuration for the control plane nodes</li>
+<li>Connection issues between nodes</li>
+<li>Problems with permissions for the kubeconfig file</li>
+<li>Difficulties with kubectl installation</li>
+</ol>
+<h3 id="the-improved-playbook">The Improved Playbook</h3>
+<p>After some troubleshooting, I developed a more robust playbook:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Install first control plane node</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s on first control plane node</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">k3s-cp0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">become</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s (v1.32.2+k3s1) on first control plane</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">shell</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=&#34;v1.32.2+k3s1&#34; sh -s - server --cluster-init</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">register</span>: <span style="color:#ae81ff">k3s_install_output</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">failed_when</span>: <span style="color:#e6db74">&#34;&#39;error&#39; in k3s_install_output.stderr | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">changed_when</span>: <span style="color:#e6db74">&#34;&#39;already installed&#39; not in k3s_install_output.stdout | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Wait for K3s API to be active on first control plane</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">wait_for</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">port</span>: <span style="color:#ae81ff">6443</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">delay</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">timeout</span>: <span style="color:#ae81ff">300</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">started</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Retrieve K3s token from first control plane</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">slurp</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">src</span>: <span style="color:#ae81ff">/var/lib/rancher/k3s/server/node-token</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">register</span>: <span style="color:#ae81ff">k3s_token_b64</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set token fact</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">set_fact</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s_token</span>: <span style="color:#e6db74">&#34;{{ k3s_token_b64[&#39;content&#39;] | b64decode | trim }}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">k3s_api_endpoint</span>: <span style="color:#e6db74">&#34;https://{{ ansible_default_ipv4.address }}:6443&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Add additional control plane nodes</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s on additional control plane nodes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">k3s-cp1, k3s-cp2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">become</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">k3s_token</span>: <span style="color:#e6db74">&#34;{{ hostvars[&#39;k3s-cp0&#39;][&#39;k3s_token&#39;] }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">k3s_api_endpoint</span>: <span style="color:#e6db74">&#34;{{ hostvars[&#39;k3s-cp0&#39;][&#39;k3s_api_endpoint&#39;] }}&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s on additional control plane nodes</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">shell</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=&#34;v1.32.2+k3s1&#34; K3S_TOKEN=&#34;{{ k3s_token }}&#34; K3S_URL=&#34;{{ k3s_api_endpoint }}&#34; sh -s - server</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">register</span>: <span style="color:#ae81ff">k3s_install_output</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">failed_when</span>: <span style="color:#e6db74">&#34;&#39;error&#39; in k3s_install_output.stderr | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">changed_when</span>: <span style="color:#e6db74">&#34;&#39;already installed&#39; not in k3s_install_output.stdout | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Wait for K3s to be active on additional control planes</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">wait_for</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">port</span>: <span style="color:#ae81ff">6443</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">delay</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">timeout</span>: <span style="color:#ae81ff">300</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">started</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Install worker nodes</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s on worker nodes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">k3s-worker0, k3s-worker1, k3s-worker2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">become</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">k3s_token</span>: <span style="color:#e6db74">&#34;{{ hostvars[&#39;k3s-cp0&#39;][&#39;k3s_token&#39;] }}&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">k3s_api_endpoint</span>: <span style="color:#e6db74">&#34;{{ hostvars[&#39;k3s-cp0&#39;][&#39;k3s_api_endpoint&#39;] }}&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install K3s on worker nodes</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">shell</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=&#34;v1.32.2+k3s1&#34; K3S_TOKEN=&#34;{{ k3s_token }}&#34; K3S_URL=&#34;{{ k3s_api_endpoint }}&#34; sh -s - agent</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">register</span>: <span style="color:#ae81ff">k3s_worker_install_output</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">failed_when</span>: <span style="color:#e6db74">&#34;&#39;error&#39; in k3s_worker_install_output.stderr | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">changed_when</span>: <span style="color:#e6db74">&#34;&#39;already installed&#39; not in k3s_worker_install_output.stdout | default(&#39;&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Wait for K3s service to be active on worker nodes</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">systemd</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">k3s-agent</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">started</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">register</span>: <span style="color:#ae81ff">k3s_agent_status</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">until</span>: <span style="color:#ae81ff">k3s_agent_status.status.ActiveState == &#34;active&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">retries</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">delay</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Set up kubeconfig</span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up kubeconfig</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">k3s-cp0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">become</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user_home</span>: <span style="color:#e6db74">&#34;/home/{{ ansible_user }}&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create .kube directory if it doesn&#39;t exist</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">file</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#34;{{ user_home }}/.kube&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">directory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">owner</span>: <span style="color:#e6db74">&#34;{{ ansible_user }}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">group</span>: <span style="color:#e6db74">&#34;{{ ansible_user }}&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">mode</span>: <span style="color:#ae81ff">0700</span>
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Copy k3s.yaml and modify server URL</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">shell</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        sed &#34;s/127.0.0.1/{{ ansible_default_ipv4.address }}/&#34; /etc/rancher/k3s/k3s.yaml &gt; {{ user_home }}/.kube/config
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        chown {{ ansible_user }}:{{ ansible_user }} {{ user_home }}/.kube/config
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        chmod 600 {{ user_home }}/.kube/config</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">creates</span>: <span style="color:#e6db74">&#34;{{ user_home }}/.kube/config&#34;</span>
+</span></span></code></pre></div><h2 id="getting-kubectl-working">Getting kubectl Working</h2>
+<p>One challenge that tripped me up was getting kubectl working properly. I ended up creating a symlink to the k3s binary, which already includes kubectl functionality:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Setup kubectl symlink</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">k3s-cp0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">become</span>: <span style="color:#66d9ef">yes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">vars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">user_home</span>: <span style="color:#e6db74">&#34;/home/paulo&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tasks</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create kubectl symlink</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">file</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">src</span>: <span style="color:#ae81ff">/usr/local/bin/k3s</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">dest</span>: <span style="color:#ae81ff">/usr/local/bin/kubectl</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">link</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Ensure .kube directory exists</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">file</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#34;{{ user_home }}/.kube&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">directory</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">owner</span>: <span style="color:#e6db74">&#34;paulo&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">group</span>: <span style="color:#e6db74">&#34;paulo&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">mode</span>: <span style="color:#e6db74">&#39;0700&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Copy k3s.yaml with proper permissions and update server address</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">shell</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        sed &#34;s/127.0.0.1/{{ ansible_default_ipv4.address }}/&#34; /etc/rancher/k3s/k3s.yaml &gt; {{ user_home }}/.kube/config
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        chown paulo:paulo {{ user_home }}/.kube/config
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        chmod 600 {{ user_home }}/.kube/config</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">creates</span>: <span style="color:#e6db74">&#34;{{ user_home }}/.kube/config&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set KUBECONFIG environment variable in user profile</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">lineinfile</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">path</span>: <span style="color:#e6db74">&#34;{{ user_home }}/.bashrc&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">line</span>: <span style="color:#e6db74">&#34;export KUBECONFIG={{ user_home }}/.kube/config&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">state</span>: <span style="color:#ae81ff">present</span>
+</span></span></code></pre></div><h2 id="setting-up-kubectl-on-the-ansible-control-node">Setting Up kubectl on the Ansible Control Node</h2>
+<p>Since I wanted to manage my cluster from my Ansible control node (rather than SSH into k3s-cp0 every time), I created an additional playbook to:</p>
+<ol>
+<li>Install kubectl on the control node</li>
+<li>Copy the kubeconfig from k3s-cp0</li>
+<li>Configure it to point to the correct IP address</li>
+</ol>
+<p>The key thing I learned is the importance of using <code>source ~/.bashrc</code> after modifying environment variables, which reloads your shell&rsquo;s environment without requiring you to log out and log back in.</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>With my cluster up and running, I&rsquo;m now focusing on:</p>
+<ol>
+<li>Deploying ArgoCD for GitOps-based deployments</li>
+<li>Setting up my ElasticSearch, Logstash, Kibana (ELK) stack for observability</li>
+<li>Implementing proper storage solutions</li>
+</ol>
+<p>My ELK stack is configured as:</p>
+<ul>
+<li>Filebeat: DaemonSet to collect logs from all nodes</li>
+<li>Logstash: StatefulSet to receive and forward logs</li>
+<li>Elasticsearch: StatefulSet with persistence</li>
+<li>Kibana: Deployment with Service and Ingress</li>
+</ul>
+<p>You can find all my configurations on GitHub at: <a href="https://github.com/HowDiggy/k8s-gitops">https://github.com/HowDiggy/k8s-gitops</a></p>
+<h2 id="key-learnings">Key Learnings</h2>
+<ol>
+<li><strong>High Availability Setup</strong>: The <code>--cluster-init</code> flag is crucial for the first control plane node</li>
+<li><strong>Permissions Matter</strong>: User permissions and file access are important for kubectl</li>
+<li><strong>Variable Passing</strong>: Using <code>set_fact</code> and <code>slurp</code> properly in Ansible makes token sharing more reliable</li>
+<li><strong>Idempotency</strong>: Properly designed Ansible playbooks should be able to run multiple times without breaking things that already work</li>
+<li><strong>Environment Variables</strong>: Understand how they work across SSH and sudo sessions</li>
+</ol>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  Paulo Jauregui 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

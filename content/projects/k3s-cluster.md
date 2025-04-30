@@ -12,7 +12,7 @@ A 6-node K3s cluster managed with GitOps principles using ArgoCD.
 - 3 worker nodes
 - Traefik ingress controller
 - ArgoCD for GitOps deployment
-- ELK stack for observability
+- ELK stack for observability (ElasticSearch, Logstash, and Kibana)
 
 ## Technologies Used
 
@@ -20,3 +20,4 @@ A 6-node K3s cluster managed with GitOps principles using ArgoCD.
 - Ansible for automation
 - Kustomize for configuration
 - ArgoCD for continuous deployment
+- Proxmox as the hypervisor running this on Virtual Machines

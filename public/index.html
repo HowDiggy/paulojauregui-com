@@ -49,8 +49,8 @@
 
   <meta itemprop="name" content="Paulo Jauregui">
   <meta itemprop="description" content="Software Engineering &amp; ML Portfolio">
-  <meta itemprop="datePublished" content="2025-04-25T18:37:24-07:00">
-  <meta itemprop="dateModified" content="2025-04-25T18:37:24-07:00">
+  <meta itemprop="datePublished" content="2025-04-25T18:36:17-07:00">
+  <meta itemprop="dateModified" content="2025-04-25T18:36:17-07:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Paulo Jauregui">
   <meta name="twitter:description" content="Software Engineering &amp; ML Portfolio">
@@ -121,10 +121,10 @@
             </a>
         </h1>
         <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
-          <p>Welcome to my personal website. I&rsquo;m Paulo Jauregui, a mathematics-CS professional exploring software engineering and machine learning.</p>
+          <p>Welcome to my personal website! I&rsquo;m Paulo Jauregui, a Mathematics-CS professional exploring software engineering and machine learning.</p>
 <p>This site will document my technical projects and learning journey, including:</p>
 <ul>
-<li>My K3s cluster running with GitOps methodology</li>
+<li>My K3s cluster (this site is actually being served by the server in my closet. How cool is that!)</li>
 <li>Software engineering and ML projects</li>
 <li>Technical tutorials and guides</li>
 </ul>
@@ -157,7 +157,7 @@
 <li>3 worker nodes</li>
 <li>Traefik ingress controller</li>
 <li>ArgoCD for GitOps deployment</li>
-<li>ELK stack for observability</li>
+<li>ELK stack for observability (ElasticSearch, Logstash, and Kibana)</li>
 </ul>
 <h2 id="technologies-used">Technologies Used</h2>
 <ul>
@@ -165,9 +165,43 @@
 <li>Ansible for automation</li>
 <li>Kustomize for configuration</li>
 <li>ArgoCD for continuous deployment</li>
+<li>Proxmox as the hypervisor running this on Virtual Machines</li>
 </ul>
         </div>
         <a href="/projects/k3s-cluster/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+          <div class="w-100 mb4 relative">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l dark-gray no-underline">
+    <div class="flex-column flex-row-ns flex">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/projects/k3s-setup/" class="color-inherit dim link">
+            
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          <h1 id="setting-up-a-6-node-k3s-kubernetes-cluster-with-ansible">Setting Up a 6-Node K3s Kubernetes Cluster with Ansible</h1>
+<p><em>Posted on April 29, 2025</em></p>
+<h2 id="introduction">Introduction</h2>
+<p>Hello fellow homelab enthusiasts! Today I&rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.</p>
+<h2 id="my-cluster-setup">My Cluster Setup</h2>
+<p>For this project, I&rsquo;m running:</p>
+<ul>
+<li>3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd</li>
+<li>3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)</li>
+</ul>
+<p>I&rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:</p>
+        </div>
+        <a href="/projects/k3s-setup/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
       </div>
     </div>
   </div>
