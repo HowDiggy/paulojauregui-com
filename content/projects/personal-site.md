@@ -1,14 +1,11 @@
----
-title: "Hosting a Secure Personal Website with Hugo, Kubernetes, and Cloudflare Tunnels"
-date: 2025-05-01
-draft: false
----
-
-# Building a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels
++++
+date = '2025-05-01'
+draft = false
+title = 'Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels'
++++
 
 _A complete GitOps approach to hosting your personal site securely from home_
 
-## Introduction
 
 For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I'll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.
 
@@ -28,8 +25,6 @@ Here's the complete architecture we'll be implementing:
 3. **Orchestration**: K3s Kubernetes cluster (6-node setup)
 4. **Continuous Deployment**: ArgoCD for GitOps
 5. **Secure Access**: Cloudflare Tunnels
-
-![Architecture Diagram](https://i.imgur.com/examplediagram.png)
 
 ## Prerequisites
 

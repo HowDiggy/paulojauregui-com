@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/hello-world/</link>
       <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/hello-world/</guid>
-      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo Jauregui, a mathematics-CS professional exploring software engineering and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;My K3s cluster running with GitOps methodology&lt;/li&gt;&#xA;&lt;li&gt;Software engineering and ML projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo, a Mathematics-CS professional exploring software engineering, platform engineering, and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;My K3s cluster (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software engineering and ML projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels | Paulo Jauregui</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="A complete GitOps approach to hosting your personal site securely from home
+For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I&rsquo;ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.">
+    <meta name="generator" content="Hugo 0.147.0">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/projects/personal-site/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/projects/personal-site/">
+  <meta property="og:site_name" content="Paulo Jauregui">
+  <meta property="og:title" content="Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels">
+  <meta property="og:description" content="A complete GitOps approach to hosting your personal site securely from home
+For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I’ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2025-05-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-05-01T00:00:00+00:00">
+
+  <meta itemprop="name" content="Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels">
+  <meta itemprop="description" content="A complete GitOps approach to hosting your personal site securely from home
+For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I’ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.">
+  <meta itemprop="datePublished" content="2025-05-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-05-01T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1606">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels">
+  <meta name="twitter:description" content="A complete GitOps approach to hosting your personal site securely from home
+For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I’ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        Paulo Jauregui
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Projects
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-05-01T00:00:00Z">May 1, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p><em>A complete GitOps approach to hosting your personal site securely from home</em></p>
+<p>For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I&rsquo;ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.</p>
+<p>This setup provides several key benefits:</p>
+<ul>
+<li><strong>Security</strong>: No open inbound ports on my home network</li>
+<li><strong>Automation</strong>: Changes to my website are automatically deployed</li>
+<li><strong>Scalability</strong>: Easy to add more services alongside the website</li>
+<li><strong>Learning</strong>: Practical experience with DevOps tools and practices</li>
+</ul>
+<h2 id="architecture-overview">Architecture Overview</h2>
+<p>Here&rsquo;s the complete architecture we&rsquo;ll be implementing:</p>
+<ol>
+<li><strong>Content Layer</strong>: Hugo static site framework</li>
+<li><strong>Containerization</strong>: Docker images stored in GitHub Container Registry</li>
+<li><strong>Orchestration</strong>: K3s Kubernetes cluster (6-node setup)</li>
+<li><strong>Continuous Deployment</strong>: ArgoCD for GitOps</li>
+<li><strong>Secure Access</strong>: Cloudflare Tunnels</li>
+</ol>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>For this tutorial, I&rsquo;m assuming you already have:</p>
+<ul>
+<li>A registered domain (I&rsquo;m using paulojauregui.com)</li>
+<li>A Cloudflare account with your domain configured</li>
+<li>A running K3s cluster (I have 3 control plane and 3 worker nodes)</li>
+<li>ArgoCD installed on your cluster</li>
+<li>A GitHub account</li>
+</ul>
+<h2 id="part-1-setting-up-the-hugo-website">Part 1: Setting Up the Hugo Website</h2>
+<h3 id="creating-the-hugo-site-structure">Creating the Hugo Site Structure</h3>
+<p>First, I set up a basic Hugo site with the Ananke theme:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Clone your GitHub repository</span>
+</span></span><span style="display:flex;"><span>git clone https://github.com/yourusername/yoursite.git
+</span></span><span style="display:flex;"><span>cd yoursite
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Initialize Hugo site</span>
+</span></span><span style="display:flex;"><span>hugo new site . --force
+</span></span><span style="display:flex;"><span>git submodule add https://github.com/theNewDynamic/gohugo-theme-ananke themes/ananke
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;theme = &#34;ananke&#34;&#39;</span> &gt;&gt; hugo.toml
+</span></span></code></pre></div><p>I organized my content with:</p>
+<ul>
+<li><code>content/posts/</code> for blog posts</li>
+<li><code>content/projects/</code> for project descriptions</li>
+<li><code>content/about.md</code> for my about page</li>
+</ul>
+<h3 id="containerizing-with-docker">Containerizing with Docker</h3>
+<p>Create a Dockerfile in the repository root:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#75715e"># Build stage. Consider pinning to a specific Hugo version for stability</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ghcr.io/gohugoio/hugo:latest AS builder</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Set working directory</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /src</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Copy source files</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> . .<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Switch to root for build permissions if needed</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">USER</span><span style="color:#e6db74"> root</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Build the website</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> hugo --config hugo.toml --minify<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Production stage</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> nginx:1.23-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Copy the built site from the builder stage</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> --from<span style="color:#f92672">=</span>builder /src/public /usr/share/nginx/html<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Copy custom nginx config</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> rm /etc/nginx/conf.d/default.conf<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> nginx.conf /etc/nginx/conf.d/<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Expose port 80</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 80</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Run nginx</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;nginx&#34;</span>, <span style="color:#e6db74">&#34;-g&#34;</span>, <span style="color:#e6db74">&#34;daemon off;&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>And a custom Nginx configuration (nginx.conf):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-nginx" data-lang="nginx"><span style="display:flex;"><span><span style="color:#66d9ef">server</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">listen</span>       <span style="color:#ae81ff">80</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">server_name</span>  <span style="color:#e6db74">localhost</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Enable gzip compression
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">gzip</span> <span style="color:#66d9ef">on</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gzip_vary</span> <span style="color:#66d9ef">on</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gzip_min_length</span> <span style="color:#ae81ff">10240</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gzip_proxied</span> <span style="color:#e6db74">expired</span> <span style="color:#e6db74">no-cache</span> <span style="color:#e6db74">no-store</span> <span style="color:#e6db74">private</span> <span style="color:#e6db74">auth</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gzip_types</span> <span style="color:#e6db74">text/plain</span> <span style="color:#e6db74">text/css</span> <span style="color:#e6db74">text/xml</span> <span style="color:#e6db74">text/javascript</span> <span style="color:#e6db74">application/x-javascript</span> <span style="color:#e6db74">application/xml</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">gzip_disable</span> <span style="color:#e6db74">&#34;MSIE</span> <span style="color:#e6db74">[1-6]\.&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">root</span>   <span style="color:#e6db74">/usr/share/nginx/html</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">index</span>  <span style="color:#e6db74">index.html</span> <span style="color:#e6db74">index.htm</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">try_files</span> $uri $uri/ =<span style="color:#ae81ff">404</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Set caching headers for static assets
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">location</span> ~<span style="color:#e6db74">*</span> <span style="color:#e6db74">\.(jpg|jpeg|png|gif|ico|css|js)</span>$ {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">expires</span> <span style="color:#e6db74">30d</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">add_header</span> <span style="color:#e6db74">Cache-Control</span> <span style="color:#e6db74">&#34;public,</span> <span style="color:#e6db74">no-transform&#34;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Error pages
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">error_page</span>   <span style="color:#ae81ff">500</span> <span style="color:#ae81ff">502</span> <span style="color:#ae81ff">503</span> <span style="color:#ae81ff">504</span>  <span style="color:#e6db74">/50x.html</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">location</span> = <span style="color:#e6db74">/50x.html</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">root</span>   <span style="color:#e6db74">/usr/share/nginx/html</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="setting-up-github-actions-for-cicd">Setting Up GitHub Actions for CI/CD</h3>
+<p>Create <code>.github/workflows/build-deploy.yml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and Deploy</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">on</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">pull_request</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">jobs</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">build-and-push</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">steps</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Checkout code</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v3</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">submodules</span>: <span style="color:#ae81ff">recursive</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Set up Docker Buildx</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/setup-buildx-action@v2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Login to GitHub Container Registry</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/login-action@v2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">registry</span>: <span style="color:#ae81ff">ghcr.io</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">username</span>: <span style="color:#ae81ff">${{ github.actor }}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">password</span>: <span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Build and push</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">docker/build-push-action@v4</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">with</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">context</span>: <span style="color:#ae81ff">.</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">push</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">tags</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            ghcr.io/yourusername/yoursite:latest
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            ghcr.io/yourusername/yoursite:${{ github.sha }}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cache-from</span>: <span style="color:#ae81ff">type=gha</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">cache-to</span>: <span style="color:#ae81ff">type=gha,mode=max</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Update deployment manifest</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">if</span>: <span style="color:#ae81ff">github.event_name != &#39;pull_request&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          echo &#34;Updating image tag in GitOps repository&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git clone https://x-access-token:${{ secrets.GIT_TOKEN }}@github.com/yourusername/k8s-gitops.git
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          cd k8s-gitops
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          # Ensure the directory exists
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          mkdir -p websites/yoursite
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          # Update the deployment.yaml with the new image tag
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          if [ -f websites/yoursite/deployment.yaml ]; then
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            sed -i &#34;s|image: ghcr.io/yourusername/yoursite:.*|image: ghcr.io/yourusername/yoursite:${{ github.sha }}|g&#34; websites/yoursite/deployment.yaml
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          else
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            echo &#34;Creating deployment files...&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          fi
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          # Set up git config
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config --global user.name &#34;GitHub Actions&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git config --global user.email &#34;actions@github.com&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          # Commit and push changes
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git add websites/yoursite/
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git commit -m &#34;Update yoursite image to ${{ github.sha }}&#34; || echo &#34;No changes to commit&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          git push</span>
+</span></span></code></pre></div><p>Note: Make sure to create a <code>GIT_TOKEN</code> secret in your GitHub repository with permissions to update your GitOps repository.</p>
+<h2 id="part-2-kubernetes-configuration">Part 2: Kubernetes Configuration</h2>
+<h3 id="creating-kubernetes-manifests">Creating Kubernetes Manifests</h3>
+<p>In my GitOps repository, I created the following manifests under <code>websites/yoursite/</code>:</p>
+<p><strong>namespace.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">websites</span>
+</span></span></code></pre></div><p><strong>deployment.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">websites</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">image</span>: <span style="color:#ae81ff">ghcr.io/yourusername/yoursite:latest</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">Always</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">requests</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;64Mi&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;50m&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">limits</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;128Mi&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;100m&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">livenessProbe</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">httpGet</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">readinessProbe</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">httpGet</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span></code></pre></div><p><strong>service.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">websites</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">ClusterIP</span>
+</span></span></code></pre></div><p><strong>kustomization.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kustomize.config.k8s.io/v1beta1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Kustomization</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">namespace.yaml</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">deployment.yaml</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">service.yaml</span>
+</span></span></code></pre></div><h3 id="configuring-argocd">Configuring ArgoCD</h3>
+<p>Create an ArgoCD Application manifest:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># argocd/applications/yoursite.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">argoproj.io/v1alpha1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Application</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">argocd</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">project</span>: <span style="color:#ae81ff">default</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">source</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">repoURL</span>: <span style="color:#ae81ff">https://github.com/yourusername/k8s-gitops.git</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetRevision</span>: <span style="color:#ae81ff">main</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">websites/yoursite</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">destination</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">server</span>: <span style="color:#ae81ff">https://kubernetes.default.svc</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">websites</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">syncPolicy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">automated</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">prune</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">selfHeal</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><h2 id="part-3-setting-up-cloudflare-tunnels">Part 3: Setting Up Cloudflare Tunnels</h2>
+<p>The most critical part of this setup is the Cloudflare Tunnel, which allows secure access to our website without exposing our home network to the internet.</p>
+<h3 id="creating-a-cloudflare-tunnel">Creating a Cloudflare Tunnel</h3>
+<p>First, install the <code>cloudflared</code> CLI tool:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># For macOS</span>
+</span></span><span style="display:flex;"><span>brew install cloudflared
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># For Ubuntu/Debian</span>
+</span></span><span style="display:flex;"><span>curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb -o cloudflared.deb
+</span></span><span style="display:flex;"><span>sudo dpkg -i cloudflared.deb
+</span></span></code></pre></div><p>Authenticate with Cloudflare:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cloudflared tunnel login
+</span></span></code></pre></div><p>Create a new tunnel:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cloudflared tunnel create mysite-tunnel
+</span></span></code></pre></div><p>Configure DNS routes for your domain:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cloudflared tunnel route dns mysite-tunnel yourdomain.com
+</span></span><span style="display:flex;"><span>cloudflared tunnel route dns mysite-tunnel www.yourdomain.com
+</span></span></code></pre></div><h3 id="deploying-the-tunnel-in-kubernetes">Deploying the Tunnel in Kubernetes</h3>
+<p>First, let&rsquo;s create manifests for the Cloudflare Tunnel in our GitOps repository:</p>
+<p><strong>namespace.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Namespace</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflare</span>
+</span></span></code></pre></div><p><strong>configmap.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ConfigMap</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflare-tunnel-config</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">cloudflare</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">data</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">config.yaml</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    tunnel: &lt;YOUR_TUNNEL_ID&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    credentials-file: /etc/cloudflared/credentials.json
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    ingress:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      - hostname: yourdomain.com
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        service: http://yoursite.websites.svc.cluster.local:80
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      - hostname: www.yourdomain.com
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        service: http://yoursite.websites.svc.cluster.local:80
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      - service: http_status:404</span>
+</span></span></code></pre></div><p><strong>deployment.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflared</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">cloudflare</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">cloudflared</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">cloudflared</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflared</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">image</span>: <span style="color:#ae81ff">cloudflare/cloudflared:latest</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">tunnel</span>
+</span></span><span style="display:flex;"><span>            - --<span style="color:#ae81ff">config</span>
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">/etc/cloudflared/config.yaml</span>
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">run</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">livenessProbe</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">httpGet</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/ready</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">port</span>: <span style="color:#ae81ff">2000</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">failureThreshold</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/etc/cloudflared/config.yaml</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">subPath</span>: <span style="color:#ae81ff">config.yaml</span>
+</span></span><span style="display:flex;"><span>            - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">credentials</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/etc/cloudflared/credentials.json</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">subPath</span>: <span style="color:#ae81ff">credentials.json</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">requests</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;128Mi&#34;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;100m&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">limits</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">memory</span>: <span style="color:#e6db74">&#34;256Mi&#34;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">cpu</span>: <span style="color:#e6db74">&#34;200m&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">configMap</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflare-tunnel-config</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">credentials</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">secret</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">secretName</span>: <span style="color:#ae81ff">cloudflare-tunnel-credentials</span>
+</span></span></code></pre></div><p><strong>kustomization.yaml</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">kustomize.config.k8s.io/v1beta1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Kustomization</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">namespace.yaml</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">configmap.yaml</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">deployment.yaml</span>
+</span></span></code></pre></div><p>For the tunnel credentials, create a secret:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Get your tunnel ID</span>
+</span></span><span style="display:flex;"><span>TUNNEL_ID<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cloudflared tunnel list | grep mysite-tunnel | awk <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy credentials to your control node</span>
+</span></span><span style="display:flex;"><span>scp ~/.cloudflared/<span style="color:#e6db74">${</span>TUNNEL_ID<span style="color:#e6db74">}</span>.json user@controlnode:~/.cloudflared/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create the secret</span>
+</span></span><span style="display:flex;"><span>kubectl create secret generic cloudflare-tunnel-credentials -n cloudflare --from-file<span style="color:#f92672">=</span>credentials.json<span style="color:#f92672">=</span>~/.cloudflared/<span style="color:#e6db74">${</span>TUNNEL_ID<span style="color:#e6db74">}</span>.json
+</span></span></code></pre></div><p>Finally, create an ArgoCD Application for the tunnel:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># argocd/applications/cloudflare-tunnel.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">argoproj.io/v1alpha1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Application</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">cloudflare-tunnel</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">argocd</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">project</span>: <span style="color:#ae81ff">default</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">source</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">repoURL</span>: <span style="color:#ae81ff">https://github.com/yourusername/k8s-gitops.git</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetRevision</span>: <span style="color:#ae81ff">main</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">infrastructure/cloudflare-tunnel</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">destination</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">server</span>: <span style="color:#ae81ff">https://kubernetes.default.svc</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">cloudflare</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">syncPolicy</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">automated</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">prune</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">selfHeal</span>: <span style="color:#66d9ef">true</span>
+</span></span></code></pre></div><h2 id="the-complete-gitops-workflow">The Complete GitOps Workflow</h2>
+<p>With everything set up, the workflow looks like this:</p>
+<ol>
+<li>
+<p><strong>Content Creation</strong>:</p>
+<ul>
+<li>Write content for my Hugo website</li>
+<li>Commit and push changes to GitHub</li>
+</ul>
+</li>
+<li>
+<p><strong>Automated Build and Deploy</strong>:</p>
+<ul>
+<li>GitHub Actions automatically builds a new Docker image</li>
+<li>The image is pushed to GitHub Container Registry</li>
+<li>The deployment manifest in the GitOps repo is updated with the new image tag</li>
+</ul>
+</li>
+<li>
+<p><strong>Infrastructure Synchronization</strong>:</p>
+<ul>
+<li>ArgoCD detects changes in the GitOps repository</li>
+<li>Changes are automatically applied to my Kubernetes cluster</li>
+<li>My website is updated with the new content</li>
+</ul>
+</li>
+<li>
+<p><strong>Secure External Access</strong>:</p>
+<ul>
+<li>Cloudflare Tunnel provides secure external access</li>
+<li>Traffic is routed through Cloudflare&rsquo;s global network</li>
+<li>My home network remains secure without exposed ports</li>
+</ul>
+</li>
+</ol>
+<h2 id="troubleshooting-common-issues">Troubleshooting Common Issues</h2>
+<p>During my setup, I encountered several issues. Here are the solutions:</p>
+<h3 id="docker-image-build-issues">Docker Image Build Issues</h3>
+<p>If you see errors about Hugo version compatibility with your theme, update the Dockerfile to use a specific Hugo version that works with your theme:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ghcr.io/gohugoio/hugo:0.111.3-ext AS builder</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><h3 id="argocd-syncing-issues">ArgoCD Syncing Issues</h3>
+<p>If your ArgoCD applications aren&rsquo;t syncing properly, verify that:</p>
+<ul>
+<li>All referenced files in kustomization.yaml exist</li>
+<li>The paths in your ArgoCD applications are correct</li>
+<li>You have proper access permissions for Git repositories</li>
+</ul>
+<h3 id="cloudflare-tunnel-connection-issues">Cloudflare Tunnel Connection Issues</h3>
+<p>If you see &ldquo;Application error 0x0&rdquo; in your Cloudflare Tunnel logs:</p>
+<ol>
+<li>Check if your tunnel credentials are correctly mounted</li>
+<li>Verify the tunnel ID in the ConfigMap matches your actual tunnel ID</li>
+<li>Consider creating a new tunnel and using its credentials</li>
+</ol>
+<h2 id="security-benefits">Security Benefits</h2>
+<p>This setup provides significant security advantages:</p>
+<ol>
+<li>
+<p><strong>No Port Forwarding Required</strong>:</p>
+<ul>
+<li>My home network firewall doesn&rsquo;t need any open inbound ports</li>
+<li>All connections are outbound-only from my K3s cluster</li>
+</ul>
+</li>
+<li>
+<p><strong>DDoS Protection</strong>:</p>
+<ul>
+<li>Cloudflare&rsquo;s network shields my infrastructure from attacks</li>
+<li>Traffic is filtered and proxied through Cloudflare&rsquo;s edge</li>
+</ul>
+</li>
+<li>
+<p><strong>IP Address Privacy</strong>:</p>
+<ul>
+<li>My home IP address is never exposed in DNS records</li>
+<li>All traffic appears to come from Cloudflare&rsquo;s network</li>
+</ul>
+</li>
+<li>
+<p><strong>Encrypted Traffic</strong>:</p>
+<ul>
+<li>All traffic is encrypted between visitors, Cloudflare, and my cluster</li>
+<li>Automatic HTTPS for my website</li>
+</ul>
+</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>This setup demonstrates how modern cloud-native tools can be adapted for homelab environments. By leveraging Kubernetes, GitOps, and Cloudflare Tunnels, I&rsquo;ve created a secure, automated deployment pipeline for my personal website that follows industry best practices.</p>
+<p>The entire stack uses free or low-cost components, making it accessible for personal projects while providing enterprise-grade security and automation. Plus, this architecture can easily scale to host additional services beyond just a website.</p>
+<p>What started as a simple personal website project has become a fantastic learning experience in cloud-native technologies and DevOps practices—all while keeping my home network secure.</p>
+<hr>
+<p><em>If you would like to use any of this code for you own project, be sure to replace placeholders with your actual values!</em></p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  Paulo Jauregui 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

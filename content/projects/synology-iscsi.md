@@ -1,10 +1,13 @@
-# Setting Up PostgreSQL with Synology iSCSI Storage in a k3s Cluster
++++
+date = '2025-04-29'
+draft = false
+title = 'Setting Up PostgreSQL with Synology iSCSI Storage in a K3s Cluster'
++++
 
-_Posted on April 29, 2025_
+_Taking care of Persistent Volumes and Persistent Volume Claims_
 
-## Introduction
 
-In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I'll walk through how I connected my k3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.
+In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I'll walk through how I connected my K3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.
 
 This solution combines the power of Kubernetes with the reliability of dedicated storage hardware, providing a solid foundation for running databases and other stateful applications in a home environment.
 

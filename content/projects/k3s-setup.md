@@ -1,8 +1,11 @@
-# Setting Up a 6-Node K3s Kubernetes Cluster with Ansible
++++
+date = '2025-04-28'
+draft = false
+title = 'Setting Up a 6-Node K3s Kubernetes Cluster with Ansible'
++++
 
-_Posted on April 29, 2025_
+_Building the Platform!_
 
-## Introduction
 
 Hello fellow homelab enthusiasts! Today I'm going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.
 

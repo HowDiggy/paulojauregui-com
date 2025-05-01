@@ -6,8 +6,29 @@
     <description>Recent content on Paulo Jauregui</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 01 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels</title>
+      <link>http://localhost:1313/projects/personal-site/</link>
+      <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/personal-site/</guid>
+      <description>&lt;p&gt;&lt;em&gt;A complete GitOps approach to hosting your personal site securely from home&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I&amp;rsquo;ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Setting Up PostgreSQL with Synology iSCSI Storage in a K3s Cluster</title>
+      <link>http://localhost:1313/projects/synology-iscsi/</link>
+      <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/synology-iscsi/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Taking care of Persistent Volumes and Persistent Volume Claims&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I&amp;rsquo;ll walk through how I connected my K3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.&lt;/p&gt;&#xA;&lt;p&gt;This solution combines the power of Kubernetes with the reliability of dedicated storage hardware, providing a solid foundation for running databases and other stateful applications in a home environment.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Setting Up a 6-Node K3s Kubernetes Cluster with Ansible</title>
+      <link>http://localhost:1313/projects/k3s-setup/</link>
+      <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/k3s-setup/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Building the Platform!&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Hello fellow homelab enthusiasts! Today I&amp;rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;my-cluster-setup&#34;&gt;My Cluster Setup&lt;/h2&gt;&#xA;&lt;p&gt;For this project, I&amp;rsquo;m running:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I&amp;rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>About Me</title>
       <link>http://localhost:1313/about/</link>
@@ -16,25 +37,11 @@
       <description>&lt;p&gt;Hi, I&amp;rsquo;m Paulo. I am a professional with a background in mathematics and computer science, currently exploring software engineering and machine learning.&lt;/p&gt;&#xA;&lt;h2 id=&#34;technical-background&#34;&gt;Technical Background&lt;/h2&gt;&#xA;&lt;p&gt;I manage a 6-node K3s cluster with GitOps methodology using ArgoCD, and have experience with:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes and container orchestration&lt;/li&gt;&#xA;&lt;li&gt;Observability solutions (ELK stack)&lt;/li&gt;&#xA;&lt;li&gt;Infrastructure as Code&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;current-focus&#34;&gt;Current Focus&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;m currently expanding my skills in full-stack web development, with a particular interest in high-performance, scalable systems.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>Hello World</title>
+      <title>Hello, World! And Welcome.</title>
       <link>http://localhost:1313/posts/hello-world/</link>
       <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/hello-world/</guid>
-      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo Jauregui, a Mathematics-CS professional exploring software engineering and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;My K3s cluster (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software engineering and ML projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/projects/k3s-setup/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/projects/k3s-setup/</guid>
-      <description>&lt;h1 id=&#34;setting-up-a-6-node-k3s-kubernetes-cluster-with-ansible&#34;&gt;Setting Up a 6-Node K3s Kubernetes Cluster with Ansible&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;Posted on April 29, 2025&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;Hello fellow homelab enthusiasts! Today I&amp;rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;my-cluster-setup&#34;&gt;My Cluster Setup&lt;/h2&gt;&#xA;&lt;p&gt;For this project, I&amp;rsquo;m running:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I&amp;rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/projects/synology-iscsi/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/projects/synology-iscsi/</guid>
-      <description>&lt;h1 id=&#34;setting-up-postgresql-with-synology-iscsi-storage-in-a-k3s-cluster&#34;&gt;Setting Up PostgreSQL with Synology iSCSI Storage in a k3s Cluster&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;Posted on April 29, 2025&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;&#xA;&lt;p&gt;In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I&amp;rsquo;ll walk through how I connected my k3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo, a Mathematics-CS professional exploring software engineering, platform engineering, and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software Engineering and Machine Learning projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>
