@@ -6,14 +6,35 @@
     <description>Recent content in Projects on Paulo Jauregui</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 01 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels</title>
+      <link>http://localhost:1313/projects/personal-site/</link>
+      <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/personal-site/</guid>
+      <description>&lt;p&gt;&lt;em&gt;A complete GitOps approach to hosting your personal site securely from home&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;For those of us who maintain homelab environments, one of the greatest challenges is securely exposing services to the internet without compromising our home network. In this post, I&amp;rsquo;ll walk through how I set up my personal website using Hugo, hosted on a K3s Kubernetes cluster, and securely exposed to the internet via Cloudflare Tunnels — all following GitOps principles.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Setting Up PostgreSQL with Synology iSCSI Storage in a K3s Cluster</title>
+      <link>http://localhost:1313/projects/synology-iscsi/</link>
+      <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/synology-iscsi/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Taking care of Persistent Volumes and Persistent Volume Claims&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;In my ongoing journey to build a production-grade homelab environment, I recently tackled one of the most critical challenges of running stateful applications in Kubernetes: reliable persistent storage. In this post, I&amp;rsquo;ll walk through how I connected my K3s cluster to my Synology NAS via iSCSI to provide robust storage for a PostgreSQL database.&lt;/p&gt;&#xA;&lt;p&gt;This solution combines the power of Kubernetes with the reliability of dedicated storage hardware, providing a solid foundation for running databases and other stateful applications in a home environment.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Setting Up a 6-Node K3s Kubernetes Cluster with Ansible</title>
+      <link>http://localhost:1313/projects/k3s-setup/</link>
+      <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/k3s-setup/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Building the Platform!&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Hello fellow homelab enthusiasts! Today I&amp;rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;my-cluster-setup&#34;&gt;My Cluster Setup&lt;/h2&gt;&#xA;&lt;p&gt;For this project, I&amp;rsquo;m running:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I&amp;rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>K3s Homelab Cluster</title>
       <link>http://localhost:1313/projects/k3s-cluster/</link>
       <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/projects/k3s-cluster/</guid>
-      <description>&lt;p&gt;A 6-node K3s cluster managed with GitOps principles using ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (also running etcd)&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes&lt;/li&gt;&#xA;&lt;li&gt;Traefik ingress controller&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for GitOps deployment&lt;/li&gt;&#xA;&lt;li&gt;ELK stack for observability&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technologies-used&#34;&gt;Technologies Used&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (K3s)&lt;/li&gt;&#xA;&lt;li&gt;Ansible for automation&lt;/li&gt;&#xA;&lt;li&gt;Kustomize for configuration&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for continuous deployment&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <description>&lt;p&gt;A 6-node K3s cluster managed with GitOps principles using ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (also running etcd)&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes&lt;/li&gt;&#xA;&lt;li&gt;Traefik ingress controller&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for GitOps deployment&lt;/li&gt;&#xA;&lt;li&gt;ELK stack for observability (ElasticSearch, Logstash, and Kibana)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technologies-used&#34;&gt;Technologies Used&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (K3s)&lt;/li&gt;&#xA;&lt;li&gt;Ansible for automation&lt;/li&gt;&#xA;&lt;li&gt;Kustomize for configuration&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for continuous deployment&lt;/li&gt;&#xA;&lt;li&gt;Proxmox as the hypervisor running this on Virtual Machines&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>

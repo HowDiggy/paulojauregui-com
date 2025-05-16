@@ -574,6 +574,10 @@ The entire stack uses free or low-cost components, making it accessible for pers
 
 What started as a simple personal website project has become a fantastic learning experience in cloud-native technologies and DevOps practices—all while keeping my home network secure.
 
+## Say hello!
+
+If you would like to reach out and chat, or if you know anyone who is looking to hire an awesome team member, I encourage you to find me on [LinkedIn](https://www.linkedin.com/in/paulo-jauregui/)!
+
 ---
 
 _If you would like to use any of this code for you own project, be sure to replace placeholders with your actual values!_
