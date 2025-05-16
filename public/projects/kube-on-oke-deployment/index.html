@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!) | Paulo Jauregui</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure&rsquo;s (OCI) &ldquo;Always Free&rdquo; tier and its Oracle Kubernetes Engine (OKE)!
+In this post, I&rsquo;ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn&rsquo;t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.">
+    <meta name="generator" content="Hugo 0.147.0">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/projects/kube-on-oke-deployment/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/projects/kube-on-oke-deployment/">
+  <meta property="og:site_name" content="Paulo Jauregui">
+  <meta property="og:title" content="From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!)">
+  <meta property="og:description" content="As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure’s (OCI) “Always Free” tier and its Oracle Kubernetes Engine (OKE)!
+In this post, I’ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn’t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2025-05-10T12:15:48-07:00">
+    <meta property="article:modified_time" content="2025-05-10T12:15:48-07:00">
+
+  <meta itemprop="name" content="From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!)">
+  <meta itemprop="description" content="As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure’s (OCI) “Always Free” tier and its Oracle Kubernetes Engine (OKE)!
+In this post, I’ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn’t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.">
+  <meta itemprop="datePublished" content="2025-05-10T12:15:48-07:00">
+  <meta itemprop="dateModified" content="2025-05-10T12:15:48-07:00">
+  <meta itemprop="wordCount" content="1511">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!)">
+  <meta name="twitter:description" content="As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure’s (OCI) “Always Free” tier and its Oracle Kubernetes Engine (OKE)!
+In this post, I’ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn’t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        Paulo Jauregui
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Projects
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!)</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-05-10T12:15:48-07:00">May 10, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure&rsquo;s (OCI) &ldquo;Always Free&rdquo; tier and its Oracle Kubernetes Engine (OKE)!</p>
+<p>In this post, I&rsquo;ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn&rsquo;t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.</p>
+<p><strong>Why OCI and OKE for a Free Tier Kubernetes Lab?</strong></p>
+<p>Oracle&rsquo;s Always Free tier is surprisingly generous. For Kubernetes, it offers:</p>
+<ul>
+<li><strong>OKE Control Plane:</strong> Free for &ldquo;Basic Clusters.&rdquo; This means Oracle manages the complex Kubernetes master components for you.</li>
+<li><strong>Compute Instances:</strong> Up to 4 Arm-based Ampere A1 OCPUs and 24GB of RAM in total, which can be configured as worker nodes. I decided to go for a 2-node setup, each with 2 OCPUs and 12GB RAM for a bit of resilience and a more realistic setup.</li>
+<li><strong>Networking &amp; Storage:</strong> Generous allowances for block storage (200GB total for boot and block volumes), Virtual Cloud Network resources, and data transfer.</li>
+</ul>
+<p>This seemed like the perfect playground to get serious Kubernetes experience.</p>
+<p><strong>Phase 1: Laying the Network Foundation (The VCN)</strong></p>
+<p>Before even thinking about OKE, I knew a solid Virtual Cloud Network (VCN) was essential. I decided to go with a &ldquo;Custom Create&rdquo; approach for OKE, which meant setting up the VCN and its components manually first. This was a fantastic learning experience in itself.</p>
+<p>Here’s what I configured:</p>
+<ol>
+<li><strong>Compartment:</strong> I started by creating a dedicated compartment named <code>oke-project</code> to keep all my resources organized.</li>
+<li><strong>VCN (<code>oke-vcn</code>):</strong> The main network, to which I assigned the CIDR block <code>10.0.0.0/16</code>.</li>
+<li><strong>Subnets (Regional):</strong>
+<ul>
+<li><strong>Public Subnet (<code>oke-public-subnet</code>):</strong> <code>10.0.1.0/24</code>. This would host the Kubernetes API endpoint and any public load balancers.</li>
+<li><strong>Private Subnet (<code>oke-private-subnet</code>):</strong> <code>10.0.2.0/24</code>. My worker nodes would live here for better security.</li>
+</ul>
+</li>
+<li><strong>Gateways:</strong>
+<ul>
+<li><strong>Internet Gateway (<code>oke-igw</code>):</strong> To provide internet access to/from the public subnet.</li>
+<li><strong>NAT Gateway (<code>oke-natgw</code>):</strong> To allow worker nodes in the private subnet to initiate outbound connections to the internet (e.g., for pulling container images or OS updates) without having public IPs.</li>
+<li><strong>Service Gateway (<code>oke-service-gateway</code>):</strong> This became crucial later! It allows resources in the VCN to access public OCI services (like OCIR, IAM) within the OCI network backbone, without traversing the public internet.</li>
+</ul>
+</li>
+<li><strong>Route Tables:</strong>
+<ul>
+<li><strong>Default Route Table (for Public Subnet):</strong> I added a rule <code>0.0.0.0/0</code> -&gt; <code>oke-igw</code>.</li>
+<li><strong>Private Route Table (<code>oke-private-rt</code>):</strong> Associated with <code>oke-private-subnet</code>. It got two key rules:
+<ul>
+<li><code>0.0.0.0/0</code> -&gt; <code>oke-natgw</code></li>
+<li>&ldquo;All &lt;My-Region&gt; Services in Oracle Services Network&rdquo; -&gt; <code>oke-service-gateway</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Security Lists:</strong> I started with the &ldquo;Default Security List for oke-vcn&rdquo; for both subnets. This needed careful tuning later, as we&rsquo;ll see!</li>
+</ol>
+<p><strong>Phase 2: Creating the OKE Cluster</strong></p>
+<p>With the VCN ready, I moved on to OKE:</p>
+<ol>
+<li><strong>Chose &ldquo;Custom Create&rdquo;</strong> for maximum control.</li>
+<li><strong>Basic Info:</strong> Named my cluster <code>oke-prod-cluster</code>, selected my <code>oke-project</code> compartment, and a recent Kubernetes version.</li>
+<li><strong>Network Selection:</strong> Pointed OKE to my <code>oke-vcn</code>.</li>
+<li><strong>API Endpoint:</strong> Selected <code>oke-public-subnet</code>. (My first hiccup was here – I later found out I needed to explicitly edit the cluster to &ldquo;Assign a public IP address to the API endpoint&rdquo; as it initially came up private).</li>
+<li><strong>Node Pool Configuration (<code>arm-pool1</code>):</strong>
+<ul>
+<li><strong>Type:</strong> Managed</li>
+<li><strong>Subnet:</strong> <code>oke-private-subnet</code></li>
+<li><strong>Shape:</strong> <code>VM.Standard.A1.Flex</code> (Always Free eligible!)</li>
+<li><strong>Resources per node:</strong> 2 OCPUs, 12GB RAM</li>
+<li><strong>Node count:</strong> 2</li>
+<li><strong>SSH Key:</strong> Added my public SSH key (id_ed25519.pub).</li>
+</ul>
+</li>
+<li><strong>&ldquo;Basic Cluster&rdquo;:</strong> Critically, on the review screen, I selected the option to <strong>&ldquo;Create a Basic cluster&rdquo;</strong> to ensure the control plane remained free.</li>
+</ol>
+<p>Then, I hit &ldquo;Create Cluster&rdquo; and waited.</p>
+<p><strong>Phase 3: The Troubleshooting Gauntlet!</strong></p>
+<p>This is where the real learning (and a bit of late-night head-scratching) happened!</p>
+<ol>
+<li>
+<p><strong><code>kubectl</code> Access - Problem 1: Private API Endpoint</strong></p>
+<ul>
+<li>My cluster became &ldquo;Active,&rdquo; but when I tried to access it, the <code>oci ... create-kubeconfig</code> command from OCI included <code>--kube-endpoint PRIVATE</code>. My API endpoint, despite being in a public subnet, didn&rsquo;t have a public IP assigned!</li>
+<li><strong>Solution:</strong> I had to &ldquo;Edit&rdquo; the OKE cluster settings in the OCI console and explicitly check the box to &ldquo;Assign a public IP address to the API endpoint.&rdquo;</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kubectl</code> Access - Problem 2: <code>oci: executable not found</code></strong></p>
+<ul>
+<li>With the public endpoint supposedly ready, <code>kubectl get nodes</code> on my Mac failed with <code>exec: executable oci not found</code>.</li>
+<li><strong>Solution:</strong> The kubeconfig generated by OCI relies on the OCI Command Line Interface (CLI) for authentication. I hadn&rsquo;t set this up on my Mac yet! I had to:
+<ol>
+<li>Install OCI CLI (I used Homebrew: <code>brew install oci-cli</code>).</li>
+<li>Run <code>oci setup config</code>, providing my User OCID, Tenancy OCID, and region.</li>
+<li>This generated an API key pair (<code>~/.oci/oci_api_key.pem</code> and <code>~/.oci/oci_api_key_public.pem</code>). I made sure to set a passphrase (the second time around! We&rsquo;ll get here) for the private key.</li>
+<li>Upload the new <code>oci_api_key_public.pem</code> to my IAM user in the OCI console, deleting any old/unused API keys.</li>
+<li>(I also learned to manage multiple kubeconfigs by saving the OKE config to a separate file like <code>~/.kube/config_oke</code> and using <code>export KUBECONFIG=$HOME/.kube/config:$HOME/.kube/config_oke</code> in my terminal to access both my local and OKE clusters).</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kubectl</code> Access - Problem 3: API Key Passphrase Prompt (The Hang!)</strong></p>
+<ul>
+<li>After setting up OCI CLI, <code>kubectl get nodes</code> initiated a browser-based authentication. After authorizing, my terminal hung, sometimes with a key icon.</li>
+<li><strong>Solution:</strong> The OCI CLI was waiting for the passphrase for my API private key! Typing that passphrase in the hung terminal allowed it to proceed. But only after realizing I had never set a passphrase and going through the process of reinitializing the credentials file with one (Step 2 above had to be revisited).</li>
+</ul>
+</li>
+<li>
+<p><strong><code>kubectl</code> Access - Problem 4: Network <code>i/o timeout</code></strong></p>
+<ul>
+<li>No more auth errors, but now <code>kubectl</code> gave an <code>i/o timeout</code> connecting to the API server&rsquo;s public IP.</li>
+<li><strong>Solution:</strong> This pointed to a Security List issue. The &ldquo;Default Security List for oke-vcn&rdquo; (used by <code>oke-public-subnet</code>) needed an ingress rule to allow TCP traffic on port <code>6443</code> from <code>0.0.0.0/0</code> (the internet). I added this rule.</li>
+</ul>
+</li>
+<li>
+<p><strong>Nodes Stuck: &ldquo;Updating (configuring)&rdquo; &amp; &ldquo;Registered Timeout&rdquo; - The Big One!</strong></p>
+<ul>
+<li>Finally, <code>kubectl get nodes</code> connected but returned &ldquo;No resources found&rdquo;! In the OCI console, my worker nodes were stuck in &ldquo;Updating (configuring)&rdquo; with a &ldquo;Kubernetes node condition: Unavailable&rdquo; and a &ldquo;registered timeout&rdquo; error.</li>
+<li>This indicated a deeper network prerequisite issue preventing nodes in the private subnet from properly bootstrapping and joining the control plane.</li>
+<li><strong>Troubleshooting Steps &amp; The Fix:</strong>
+<ol>
+<li><strong>Service Gateway:</strong> I had missed this initially for the private subnet. I created a Service Gateway for my VCN, allowing access to &ldquo;All &lt;My-Region&gt; Services in Oracle Services Network.&rdquo; Then, I added a route rule in my <code>oke-private-rt</code> (the private subnet&rsquo;s route table) to direct traffic for these OCI services to the Service Gateway.</li>
+<li><strong>Egress Rules:</strong> I confirmed the Egress Rules for the &ldquo;Default Security List&rdquo; (used by <code>oke-private-subnet</code>) were permissive (allowing All Protocols to <code>0.0.0.0/0</code>). This was already correct.</li>
+<li><strong>The Breakthrough - Ingress Rules for Private Subnet:</strong> The &ldquo;Default Security List&rdquo; (still shared by both public and private subnets at this point) was missing a crucial <em>ingress</em> rule for VCN-internal communication. The OKE control plane couldn&rsquo;t properly communicate <em>to</em> the worker nodes.
+<ul>
+<li><strong>Solution:</strong> I added an ingress rule to the &ldquo;Default Security List for oke-vcn&rdquo;:
+<ul>
+<li>Source: <code>10.0.0.0/16</code> (my VCN CIDR)</li>
+<li>IP Protocol: <code>All Protocols</code></li>
+<li>Allowing all traffic <em>from within the VCN itself</em>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Node Reprovisioning:</strong> After adding this VCN-internal ingress rule, I deleted one of the stuck worker nodes. OKE automatically provisioned a new one. This time, with all network prerequisites finally in place&hellip; success!</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>Phase 4: Success! Two Healthy Nodes!</strong></p>
+<p>The newly provisioned node came up with &ldquo;Kubernetes node condition: Ready&rdquo; and &ldquo;Node state: Active.&rdquo; I deleted the other stuck node, its replacement also came up healthy, and finally, <code>kubectl get nodes</code> proudly displayed:</p>
+<pre tabindex="0"><code>NAME                                STATUS   ROLES   AGE   VERSION
+oke-cxqwiihujioa-nqkwomk4ra-...     Ready    node    12m   v1.32.1
+oke-cxqwiihujioa-nqkwomk4ra-...     Ready    node    5m    v1.32.1
+</code></pre><p><strong>Key Takeaways &amp; What&rsquo;s Next</strong></p>
+<p>This journey was longer than expected but incredibly valuable.</p>
+<ul>
+<li><strong>OCI Networking is Powerful but Precise:</strong> Every component (VCN, Subnets, Route Tables, Security Lists, IGW, NATGW, Service Gateway) plays a critical role. A misconfiguration in any one can have cascading effects.</li>
+<li><strong>Troubleshooting is Learning:</strong> Hitting these roadblocks and working through them taught me more than if everything had worked perfectly on the first try.</li>
+<li><strong>Always Free is Viable:</strong> It&rsquo;s entirely possible to get a robust, multi-node Kubernetes learning environment on OCI without spending anything.</li>
+</ul>
+<p>Next up for me? Deploying my personal website and blog to this shiny new OKE cluster! It&rsquo;s currently running on a local k3s setup, so migrating it to OKE will be the next chapter in this cloud adventure.</p>
+<p>Thanks for reading, and I hope this detailed walkthrough helps anyone else looking to explore Kubernetes on OCI&rsquo;s Always Free tier!</p>
+<h2 id="say-hello">Say hello!</h2>
+<p>If you would like to reach out and chat, or if you know anyone who is looking to hire an awesome team member, I encourage you to find me on <a href="https://www.linkedin.com/in/paulo-jauregui/">LinkedIn</a>!</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  Paulo Jauregui 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

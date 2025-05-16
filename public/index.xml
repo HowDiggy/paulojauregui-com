@@ -6,8 +6,22 @@
     <description>Recent content on Paulo Jauregui</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 01 May 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 16 May 2025 11:50:26 -0700</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Deploying to the Cloud! Moving off Prem and onto OKE</title>
+      <link>http://localhost:1313/projects/deploying-pj-to-oke/</link>
+      <pubDate>Fri, 16 May 2025 11:50:26 -0700</pubDate>
+      <guid>http://localhost:1313/projects/deploying-pj-to-oke/</guid>
+      <description>&lt;p&gt;Hey everyone! And welcome back. The journey to deepen my skills in software engineering and cloud-native technologies continues. Recently, I embarked on a project to redeploy my personal website, &lt;a href=&#34;https://paulojauregui.com&#34;&gt;paulojauregui.com&lt;/a&gt;, onto an Oracle Kubernetes Engine (OKE) cluster. I was hosting it locally from my Kubernetes cluster that lives in my closet, and while fun and educative this experience was, it was not without its pitfalls. Namely, if/when I broke my internet by playing around with my server, my site would become unavailable. To accomplish this, we would continue using a complete GitOps approach with Argo CD, ensuring automated SSL with Cert-Manager, and navigating the real-world challenges that come with it. I&amp;rsquo;m excited to share the process, the hurdles, and the &amp;ldquo;aha!&amp;rdquo; moments.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>From Zero to OKE: My Adventure Building a Free Kubernetes Cluster on Oracle Cloud (and the Lessons Learned!)</title>
+      <link>http://localhost:1313/projects/kube-on-oke-deployment/</link>
+      <pubDate>Sat, 10 May 2025 12:15:48 -0700</pubDate>
+      <guid>http://localhost:1313/projects/kube-on-oke-deployment/</guid>
+      <description>&lt;p&gt;As someone passionate about diving deeper into cloud-native technologies and aiming for a career pivot into software or machine learning engineering, getting hands-on experience with Kubernetes in a real cloud environment was high on my list. The challenge? Doing it without breaking the bank. The solution? Oracle Cloud Infrastructure&amp;rsquo;s (OCI) &amp;ldquo;Always Free&amp;rdquo; tier and its Oracle Kubernetes Engine (OKE)!&lt;/p&gt;&#xA;&lt;p&gt;In this post, I&amp;rsquo;ll walk you through my journey of setting up a two-node OKE cluster, leveraging those free resources, and navigating the inevitable troubleshooting that comes with any ambitious tech project. My goal wasn&amp;rsquo;t just to get a cluster running, but to understand the nuts and bolts, especially the networking, which is so crucial in the cloud.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Building and Hosting a Secure Personal Website with Hugo, K3s, and Cloudflare Tunnels</title>
       <link>http://localhost:1313/projects/personal-site/</link>
@@ -30,6 +44,13 @@
       <description>&lt;p&gt;&lt;em&gt;Building the Platform!&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Hello fellow homelab enthusiasts! Today I&amp;rsquo;m going to walk you through how I set up a 6-node Kubernetes cluster using K3s and Ansible. This was part of my ongoing project to build a production-grade home lab environment using GitOps methodologies with ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;my-cluster-setup&#34;&gt;My Cluster Setup&lt;/h2&gt;&#xA;&lt;p&gt;For this project, I&amp;rsquo;m running:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (k3s-cp0, k3s-cp1, k3s-cp2) that also run etcd&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes (k3s-worker0, k3s-worker1, k3s-worker2)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;I&amp;rsquo;m using Ansible to automate the deployment with all nodes managed in my inventory:&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Contact</title>
+      <link>http://localhost:1313/contact/</link>
+      <pubDate>Fri, 25 Apr 2025 18:37:24 -0700</pubDate>
+      <guid>http://localhost:1313/contact/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>About Me</title>
       <link>http://localhost:1313/about/</link>
       <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
@@ -41,7 +62,14 @@
       <link>http://localhost:1313/posts/hello-world/</link>
       <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/hello-world/</guid>
-      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo, a Mathematics-CS professional exploring software engineering, platform engineering, and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software Engineering and Machine Learning projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <description>&lt;p&gt;Welcome to my personal website! I&amp;rsquo;m Paulo, a Mathematics-CS professional exploring software engineering, platform engineering, and machine learning.&lt;/p&gt;&#xA;&lt;p&gt;This site will document my technical projects and learning journey, including:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (this site is actually being served by the server in my closet. How cool is that!)&lt;/li&gt;&#xA;&lt;li&gt;Software Engineering and Machine Learning projects&lt;/li&gt;&#xA;&lt;li&gt;Technical tutorials and guides&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;say-hello&#34;&gt;Say hello!&lt;/h2&gt;&#xA;&lt;p&gt;In the meantime, if you would like to reach out and chat, or if you know anyone who is looking to hire an awesome team member, I encourage you to find me on &lt;a href=&#34;https://www.linkedin.com/in/paulo-jauregui/&#34;&gt;LinkedIn&lt;/a&gt;!&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>K3s Homelab Cluster</title>
+      <link>http://localhost:1313/projects/k3s-cluster/</link>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/projects/k3s-cluster/</guid>
+      <description>&lt;p&gt;A 6-node K3s cluster managed with GitOps principles using ArgoCD.&lt;/p&gt;&#xA;&lt;h2 id=&#34;architecture&#34;&gt;Architecture&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;3 control plane nodes (also running etcd)&lt;/li&gt;&#xA;&lt;li&gt;3 worker nodes&lt;/li&gt;&#xA;&lt;li&gt;Traefik ingress controller&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for GitOps deployment&lt;/li&gt;&#xA;&lt;li&gt;ELK stack for observability (ElasticSearch, Logstash, and Kibana)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;technologies-used&#34;&gt;Technologies Used&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Kubernetes (K3s)&lt;/li&gt;&#xA;&lt;li&gt;Ansible for automation&lt;/li&gt;&#xA;&lt;li&gt;Kustomize for configuration&lt;/li&gt;&#xA;&lt;li&gt;ArgoCD for continuous deployment&lt;/li&gt;&#xA;&lt;li&gt;Proxmox as the hypervisor running this on Virtual Machines&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
   </channel>
 </rss>
